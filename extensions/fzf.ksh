@@ -1,11 +1,15 @@
+#!/bin/ksh
+# shellcheck disable=SC2012
+
 zpatch() {
-	if [ -z $OHMYPATCHES ]; then
+	if [ -z "$OHMYPATCHES" ]; then
 		echo "please set OHMYPATCHES to the directory that contains your patches."
 		return 1
 	fi
 
-	local _patch_file="$(ls ${OHMYPATCHES}/* | fzf)"
-	/usr/bin/patch $@ < "${_patch_file}"
+	local _patch_file
+	_patch_file="$(ls "${OHMYPATCHES}/*" | fzf)"
+	/usr/bin/patch "$@" < "${_patch_file}"
 }
 
 zh() {
@@ -27,8 +31,8 @@ zpkg() {
 		return 1
 	fi
 
-	if [ -z $1 ]; then
-	       	echo $_usage
+	if [ -z "$1" ]; then
+	       	echo "$_usage"
 		return 1
 	else
 		case $1 in
@@ -37,14 +41,14 @@ zpkg() {
 					/usr/local/share/sqlports \
 					"select distinct fullpkgname from Ports;" |\
 				       	fzf --preview "/usr/sbin/pkg_info {1}")
-				[ ! -z $_pkg ] && ${OHMY_DO} /usr/sbin/pkg_add $_pkg
+				[ -n "$_pkg" ] && ${OHMY_DO} /usr/sbin/pkg_add "$_pkg"
 				;;
 			rm)
-				_pkg=$(ls -1 /var/db/pkg | fzf --preview "/usr/sbin/pkg_info {1}")
-				[ ! -z $_pkg ] && ${OHMY_DO} /usr/sbin/pkg_delete $_pkg
+				_pkg=$(ls /var/db/pkg | fzf --preview "/usr/sbin/pkg_info {1}")
+				[ -n "$_pkg" ] && ${OHMY_DO} /usr/sbin/pkg_delete "$_pkg"
 				;;
 			*)
-				echo $_usage
+				echo "$_usage"
 		esac
 	fi
 }
