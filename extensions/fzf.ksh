@@ -9,7 +9,7 @@ zpatch() {
 }
 
 zh() {
-	fc -ln | eval $(fzf)
+	fc -lrn 1 | awk '!seen[$0]++' | eval "$(fzf --no-sort -e)"
 }
 
 zpkg() {
