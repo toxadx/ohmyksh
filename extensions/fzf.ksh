@@ -13,7 +13,15 @@ zpatch() {
 }
 
 zh() {
-	fc -lrn 1 | awk '!seen[$0]++' | eval "$(fzf --no-sort -e)"
+	local fzf_cmd
+	if [ -n "$*" ]; then
+		fzf_cmd="$(fc -lrn 1 | awk '!seen[$0]++' | fzf --no-sort -e -q "$*")"
+	else
+		fzf_cmd="$(fc -lrn 1 | awk '!seen[$0]++' | fzf --no-sort -e)"
+	fi
+	if [ -n "$fzf_cmd" ]; then
+		$fzf_cmd
+	fi
 }
 
 zpkg() {
