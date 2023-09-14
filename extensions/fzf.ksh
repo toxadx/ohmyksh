@@ -15,10 +15,9 @@ zpatch() {
 zh() {
 	local fzf_cmd
 	if [ -n "$*" ]; then
-		fzf_cmd="$(fc -lrn 1 | awk '!seen[$0]++' | fzf --no-sort -e -q "$*")"
-	else
-		fzf_cmd="$(fc -lrn 1 | awk '!seen[$0]++' | fzf --no-sort -e)"
+		query="-q $*"
 	fi
+	fzf_cmd="$(fc -lrn 1 | awk '!seen[$0]++' | fzf --no-sort -e $query)"
 	if [ -n "$fzf_cmd" ]; then
 		$fzf_cmd
 	fi
